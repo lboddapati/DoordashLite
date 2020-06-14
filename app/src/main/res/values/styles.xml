@@ -7,4 +7,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="BodyText">
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="BodyText.Bold" parent="BodyText">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CaptionText">
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 </resources>
