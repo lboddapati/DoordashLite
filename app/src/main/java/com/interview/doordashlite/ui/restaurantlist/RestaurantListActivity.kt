@@ -13,7 +13,7 @@ import org.koin.core.parameter.parametersOf
 class RestaurantListActivity: AppCompatActivity(), RestaurantListContract.View {
 
     private val presenter: RestaurantListContract.Presenter by inject {
-        parametersOf(this, RestaurantListRouter(this))
+        parametersOf(this, RestaurantListRouter(this), lifecycle)
     }
     private lateinit var adapter: RestaurantListAdapter
 

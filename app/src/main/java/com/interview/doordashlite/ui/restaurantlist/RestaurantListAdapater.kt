@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.interview.doordashlite.R
 import com.interview.doordashlite.models.RestaurantCondensed
 import com.squareup.picasso.Picasso
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class RestaurantListAdapter(
     private val presenter: RestaurantListContract.Presenter
@@ -24,7 +26,7 @@ class RestaurantListAdapter(
     )
 
     override fun onBindViewHolder(holder: RestaurantListItemViewHolder, position: Int) {
-        holder.bindViewHolder(restaurants[position])
+        holder.bind(restaurants[position])
     }
 
     override fun getItemCount() = restaurants.size
@@ -39,7 +41,9 @@ class RestaurantListAdapter(
 class RestaurantListItemViewHolder(
     view: View,
     presenter: RestaurantListContract.Presenter
-): RecyclerView.ViewHolder(view) {
+): RecyclerView.ViewHolder(view), KoinComponent {
+    private val picasso: Picasso by inject()
+
     private val thumbnail = view.findViewById<ImageView>(R.id.thumbnail)
     private val name = view.findViewById<TextView>(R.id.name)
     private val description = view.findViewById<TextView>(R.id.description)
@@ -51,8 +55,8 @@ class RestaurantListItemViewHolder(
         view.setOnClickListener { presenter.onRestaurantSelected(selectedRestaurant) }
     }
 
-    fun bindViewHolder(restaurant: RestaurantCondensed) {
-        Picasso.get().load(restaurant.thumbnailUrl).into(thumbnail)
+    fun bind(restaurant: RestaurantCondensed) {
+        picasso.load(restaurant.thumbnailUrl).into(thumbnail)
         name.text = restaurant.name
         description.text = restaurant.description
         status.text = restaurant.status

@@ -10,7 +10,7 @@ import org.koin.core.parameter.parametersOf
 class RestaurantDetailActivity: AppCompatActivity(), RestaurantDetailContract.View {
 
     private val presenter: RestaurantDetailContract.Presenter by inject {
-        parametersOf(this, RestaurantDetailRouter.createViewModel(intent))
+        parametersOf(this, RestaurantDetailRouter.createViewModel(intent), lifecycle)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

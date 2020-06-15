@@ -10,7 +10,7 @@ class DoordashLiteApplication: Application() {
         startKoin {
             androidContext(this@DoordashLiteApplication)
             modules(
-                dataRepositoryModule,
+                applicationModule,
                 presenterFactoryModule
             )
         }
