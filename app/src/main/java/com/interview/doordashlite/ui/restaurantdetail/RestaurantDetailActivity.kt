@@ -1,13 +1,13 @@
 package com.interview.doordashlite.ui.restaurantdetail
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.interview.doordashlite.R
+import com.interview.doordashlite.base.BaseActivity
 import com.interview.doordashlite.models.RestaurantFull
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
-class RestaurantDetailActivity: AppCompatActivity(), RestaurantDetailContract.View {
+class RestaurantDetailActivity: BaseActivity(), RestaurantDetailContract.View {
 
     private val presenter: RestaurantDetailContract.Presenter by inject {
         parametersOf(this, RestaurantDetailRouter.createViewModel(intent), lifecycle)
@@ -20,11 +20,8 @@ class RestaurantDetailActivity: AppCompatActivity(), RestaurantDetailContract.Vi
 
     override fun displayRestaurant(restaurant: RestaurantFull) {
         title = restaurant.name
+        setContentView(R.layout.restaurant_detail_activity)
     }
 
-    override fun displayError(error: Throwable) {
-        // TODO: Display more useful error message and hook up retry logic
-        Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
-            .show()
-    }
+    override fun displayError() = displayError { presenter.onRetryClicked() }
 }

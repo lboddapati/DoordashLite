@@ -23,21 +23,27 @@ class RestaurantListPresenter(
         router.openRestaurantDetail(restaurant.id)
     }
 
+    override fun onRetryClicked() {
+        loadRestaurants()
+    }
+
     private fun loadRestaurants() {
+        view.displayLoading()
         subscriptionManager.subscribe(
             // TODO: get & use current location instead of hardcoding
             dataRepository.getRestaurantList(37.422740.toFloat(), (-122.139956).toFloat()),
             object: DisposableSingleObserver<List<RestaurantCondensed>>() {
                 override fun onSuccess(restaurants: List<RestaurantCondensed>) {
-                    // TODO:
-                    // 1. Handle empty response
-                    // 2. paginated loading for performance improvements
-                    // 3. Loading state for perceived performance improvements
-                    view.displayRestaurants(restaurants)
+                    // TODO: paginated loading for performance improvements
+                    if (restaurants.isEmpty()) {
+                        view.displayEmptyState()
+                    } else {
+                        view.displayRestaurants(restaurants)
+                    }
                 }
 
                 override fun onError(error: Throwable) {
-                    view.displayError(error)
+                    view.displayError()
                 }
             })
     }

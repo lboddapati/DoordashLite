@@ -2,4 +2,8 @@
     <string name="app_name">DoordashLite</string>
     <string name="discover">Discover</string>
     <string name="restaurant_thumbnail_content_description">restaurant thumbnail image</string>
+
+    <string name="generic_error">Oops! Something went wrong. Please try again</string>
+    <string name="retry">Retry</string>
+    <string name="no_restaurants_nearby">No Restaurants found nearby</string>
 </resources>

@@ -5,11 +5,14 @@ import com.interview.doordashlite.models.RestaurantFull
 
 interface RestaurantDetailContract {
     interface View {
+        fun displayLoading()
         fun displayRestaurant(restaurant: RestaurantFull)
-        fun displayError(error: Throwable)
+        fun displayError()
     }
 
-    interface Presenter: BasePresenter {}
+    interface Presenter: BasePresenter {
+        fun onRetryClicked()
+    }
 
     interface Router {}
 }

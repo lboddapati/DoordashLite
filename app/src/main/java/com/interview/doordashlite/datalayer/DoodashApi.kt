@@ -13,8 +13,6 @@ interface DoodashApi {
     fun getRestaurantList(
         @Query("lat") latitude: Float,
         @Query("lng") longitude: Float
-//        @Query("limit") limit: Int?
-//        @Query("offset") offset: Int?,
     ) : Single<List<RestaurantCondensed>>
 
     @GET("restaurant/{id}/")

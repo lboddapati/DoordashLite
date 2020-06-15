@@ -42,7 +42,25 @@ class RestaurantListPresenterTest : KoinTest {
     }
 
     @Test
-    fun onRestaurantListRequestSuccess_updatesViewWithResults() {
+    fun onRetryClicked_loadsRestaurants() {
+        whenever(dataRepository.getRestaurantList(any(), any()))
+            .thenReturn(Single.just(listOf()))
+        RestaurantListPresenter(view, router, get()).onRetryClicked()
+
+        verify(dataRepository).getRestaurantList(any(), any())
+    }
+
+    @Test
+    fun onRestaurantListRequestSuccess_emptyResults_updatesViewWithEmptyState() {
+        whenever(dataRepository.getRestaurantList(any(), any()))
+            .thenReturn(Single.just(listOf()))
+        RestaurantListPresenter(view, router, get()).onCreate()
+
+        verify(view).displayEmptyState()
+    }
+
+    @Test
+    fun onRestaurantListRequestSuccess_nonEmptyResults_updatesViewWithResults() {
         val restaurants = listOf(RestaurantCondensed("", "", "", "", "", 0))
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(restaurants))
@@ -53,12 +71,11 @@ class RestaurantListPresenterTest : KoinTest {
 
     @Test
     fun onRestaurantListRequestFailure_updatesViewWithError() {
-        val error = Throwable()
         whenever(dataRepository.getRestaurantList(any(), any()))
-            .thenReturn(Single.error(error))
+            .thenReturn(Single.error(Throwable()))
         RestaurantListPresenter(view, router, get()).onCreate()
 
-        verify(view).displayError(error)
+        verify(view).displayError()
     }
 
     @Test

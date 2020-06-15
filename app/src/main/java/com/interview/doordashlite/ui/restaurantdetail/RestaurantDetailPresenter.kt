@@ -22,7 +22,12 @@ class RestaurantDetailPresenter(
         loadRestaurant()
     }
 
+    override fun onRetryClicked() {
+        loadRestaurant()
+    }
+
     private fun loadRestaurant() {
+        view.displayLoading()
         subscriptionManager.subscribe(
             dataRepository.getRestaurant(viewModel.restaurantId),
             object: DisposableSingleObserver<RestaurantFull>() {
@@ -31,7 +36,7 @@ class RestaurantDetailPresenter(
                 }
 
                 override fun onError(error: Throwable) {
-                    view.displayError(error)
+                    view.displayError()
                 }
             })
     }
