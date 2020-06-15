@@ -2,7 +2,7 @@ package com.interview.doordashlite.models
 
 import com.squareup.moshi.Json
 
-// TODO
+// TODO: Create proper full restaurant object required to render detail screen
 data class RestaurantFull(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "name") val name: String,

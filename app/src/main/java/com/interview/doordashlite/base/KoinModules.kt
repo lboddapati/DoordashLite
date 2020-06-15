@@ -8,6 +8,7 @@ import com.interview.doordashlite.ui.restaurantdetail.RestaurantDetailPresenter
 import com.interview.doordashlite.ui.restaurantdetail.RestaurantDetailViewModel
 import com.interview.doordashlite.ui.restaurantlist.RestaurantListContract
 import com.interview.doordashlite.ui.restaurantlist.RestaurantListPresenter
+import com.interview.doordashlite.ui.restaurantlist.RestaurantListViewModel
 import com.squareup.picasso.Picasso
 import org.koin.dsl.module
 
@@ -22,8 +23,9 @@ val presenterFactoryModule = module {
             (view: RestaurantListContract.View,
                 router: RestaurantListContract.Router,
                 lifecycle: Lifecycle) ->
-        RestaurantListPresenter(view, router, LifecycleAwareSubscriptionManager(lifecycle))
+        RestaurantListPresenter(view, RestaurantListViewModel(), router, LifecycleAwareSubscriptionManager(lifecycle))
     }
+
     factory<RestaurantDetailContract.Presenter> {
         (view: RestaurantDetailContract.View,
             viewModel: RestaurantDetailViewModel,

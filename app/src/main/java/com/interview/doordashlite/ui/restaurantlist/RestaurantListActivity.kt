@@ -1,6 +1,7 @@
 package com.interview.doordashlite.ui.restaurantlist
 
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.interview.doordashlite.R
@@ -9,6 +10,9 @@ import com.interview.doordashlite.models.RestaurantCondensed
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
+/**
+ * Activity for displaying a list of restaurants around a given location
+ */
 class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
 
     private val presenter: RestaurantListContract.Presenter by inject {
@@ -38,6 +42,10 @@ class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
         findViewById<RecyclerView>(R.id.recyclerview).apply {
             layoutManager = LinearLayoutManager(this@RestaurantListActivity)
             adapter = this@RestaurantListActivity.adapter
+            addItemDecoration(DividerItemDecoration(
+                this@RestaurantListActivity,
+                RecyclerView.VERTICAL
+            ))
         }
     }
 }

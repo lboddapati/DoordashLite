@@ -16,6 +16,11 @@ import io.reactivex.subscribers.DisposableSubscriber
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * A lifecycle aware class for managing Rx subscriptions based on [Lifecycle] events. The manager
+ * keeps track of currently subscribed disposables and disposes them when [Lifecycle.Event.ON_STOP]
+ * is observed. This is done in order to prevent issues such as memory leaks.
+ */
 class LifecycleAwareSubscriptionManager(lifecycle: Lifecycle): LifecycleObserver, KoinComponent {
 
     private val subscriptionConfig: SubscriptionConfig by inject()
@@ -27,6 +32,8 @@ class LifecycleAwareSubscriptionManager(lifecycle: Lifecycle): LifecycleObserver
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume(owner: LifecycleOwner) {
+        // Once a disposable has been disposed, it cannot be subscribed to again. So let's create
+        // a new disposable.
         if (disposables.isDisposed) disposables = CompositeDisposable()
     }
 

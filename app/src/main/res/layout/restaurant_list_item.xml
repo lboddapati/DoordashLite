@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/restaurant_list_item_height"
-    android:layout_margin="@dimen/padding_default"
+    android:padding="@dimen/padding_default"
     android:background="?android:attr/selectableItemBackground"
     android:foreground="?android:attr/selectableItemBackground">
 
@@ -18,14 +18,14 @@
         app:layout_constraintEnd_toStartOf="@id/name"
         app:layout_constraintTop_toTopOf="@id/thumbnail"
         app:layout_constraintBottom_toTopOf="parent"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_small" />
+        android:layout_marginEnd="@dimen/padding_default" />
 
     <TextView android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Tsing Tao Best Fried Chicken Restaurant in the World"
         android:maxLines="1"
+        android:ellipsize="end"
         android:textAppearance="@style/BodyText.Bold"
         app:layout_constraintStart_toEndOf="@id/thumbnail"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,13 +36,13 @@
     <TextView android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Chinese, Soup"
+        tools:text="Chinese, Soup, Dumplings, Dimsum, Asian Fusion, Japanese"
         android:maxLines="2"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="@id/name"
         app:layout_constraintEnd_toStartOf="@id/status"
         app:layout_constraintTop_toBottomOf="@id/name"
-        android:layout_marginEnd="@dimen/padding_default"
-        android:layout_marginRight="@dimen/padding_default"/>
+        android:layout_marginEnd="@dimen/padding_default" />
 
     <TextView
         android:id="@+id/status"

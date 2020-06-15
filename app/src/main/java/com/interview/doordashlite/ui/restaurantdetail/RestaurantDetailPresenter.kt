@@ -1,11 +1,8 @@
 package com.interview.doordashlite.ui.restaurantdetail
 
-import android.annotation.SuppressLint
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
 import com.interview.doordashlite.datalayer.DataRepository
-import com.interview.doordashlite.models.RestaurantCondensed
 import com.interview.doordashlite.models.RestaurantFull
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import org.koin.core.KoinComponent
 import org.koin.core.inject
