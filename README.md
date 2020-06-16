@@ -22,3 +22,6 @@ The application uses Koin for injecting the DataRepository, Presenters and other
 - Image Loading: [Picasso](https://github.com/square/picasso)
 - Dependency Injection: [Koin](https://github.com/InsertKoinIO/koin)
 - Testing: koin-test, [mockito-kotlin](https://github.com/nhaarman/mockito-kotlin), [Robolectric](https://github.com/robolectric/robolectric)
+
+## Miscellaneous
+- API level supported: 21+
