@@ -31,14 +31,14 @@ class LifecycleAwareSubscriptionManager(lifecycle: Lifecycle): LifecycleObserver
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume(owner: LifecycleOwner) {
+    private fun onResume(owner: LifecycleOwner) {
         // Once a disposable has been disposed, it cannot be subscribed to again. So let's create
         // a new disposable.
         if (disposables.isDisposed) disposables = CompositeDisposable()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onStop(owner: LifecycleOwner) {
+    private fun onStop(owner: LifecycleOwner) {
         disposables.dispose()
     }
 

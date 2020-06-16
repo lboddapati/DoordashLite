@@ -1,5 +1,5 @@
 package com.interview.doordashlite.base
 
-interface BasePresenter {
-    fun onCreate()
-}
+import androidx.lifecycle.LifecycleObserver
+
+interface BasePresenter: LifecycleObserver

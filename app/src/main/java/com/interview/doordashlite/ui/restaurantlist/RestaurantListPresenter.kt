@@ -1,5 +1,7 @@
 package com.interview.doordashlite.ui.restaurantlist
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
 import com.interview.doordashlite.datalayer.DataRepository
 import com.interview.doordashlite.models.RestaurantCondensed
@@ -16,10 +18,6 @@ class RestaurantListPresenter(
 
     private val dataRepository : DataRepository by inject()
 
-    override fun onCreate() {
-        loadRestaurants()
-    }
-
     override fun onRestaurantSelected(restaurant: RestaurantCondensed) {
         router.openRestaurantDetail(restaurant.id)
     }
@@ -28,6 +26,7 @@ class RestaurantListPresenter(
         loadRestaurants()
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun loadRestaurants() {
         view.displayLoading()
         subscriptionManager.subscribe(

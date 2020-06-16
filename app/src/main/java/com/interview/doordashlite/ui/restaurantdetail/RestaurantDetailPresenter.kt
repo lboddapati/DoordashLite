@@ -1,5 +1,7 @@
 package com.interview.doordashlite.ui.restaurantdetail
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
 import com.interview.doordashlite.datalayer.DataRepository
 import com.interview.doordashlite.models.RestaurantFull
@@ -15,14 +17,11 @@ class RestaurantDetailPresenter(
 
     private val dataRepository: DataRepository by inject()
 
-    override fun onCreate() {
-        loadRestaurant()
-    }
-
     override fun onRetryClicked() {
         loadRestaurant()
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun loadRestaurant() {
         view.displayLoading()
         subscriptionManager.subscribe(

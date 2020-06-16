@@ -23,13 +23,22 @@ val presenterFactoryModule = module {
             (view: RestaurantListContract.View,
                 router: RestaurantListContract.Router,
                 lifecycle: Lifecycle) ->
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, LifecycleAwareSubscriptionManager(lifecycle))
+        RestaurantListPresenter(
+            view,
+            RestaurantListViewModel(),
+            router,
+            LifecycleAwareSubscriptionManager(lifecycle)
+        ).apply { lifecycle.addObserver(this) }
     }
 
     factory<RestaurantDetailContract.Presenter> {
         (view: RestaurantDetailContract.View,
             viewModel: RestaurantDetailViewModel,
             lifecycle: Lifecycle) ->
-        RestaurantDetailPresenter(view, viewModel, LifecycleAwareSubscriptionManager(lifecycle))
+        RestaurantDetailPresenter(
+            view,
+            viewModel,
+            LifecycleAwareSubscriptionManager(lifecycle)
+        ).apply { lifecycle.addObserver(this) }
     }
 }

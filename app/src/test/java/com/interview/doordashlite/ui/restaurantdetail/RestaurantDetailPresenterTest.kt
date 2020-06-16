@@ -1,5 +1,7 @@
 package com.interview.doordashlite.ui.restaurantdetail
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleRegistry
 import com.interview.doordashlite.base.testApplicationModule
 import com.interview.doordashlite.datalayer.DataRepository
 import com.interview.doordashlite.models.RestaurantFull
@@ -35,8 +37,10 @@ class RestaurantDetailPresenterTest: KoinTest {
     fun onCreate_loadsRestaurant() {
         whenever(dataRepository.getRestaurant(any()))
             .thenReturn(Single.just(mock()))
-        RestaurantDetailPresenter(view, viewModel, get())
-            .onCreate()
+        LifecycleRegistry(mock()).apply {
+            addObserver(RestaurantDetailPresenter(view, viewModel, get()))
+            handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        }
 
         verify(dataRepository).getRestaurant(RESTAURANT_ID)
     }
@@ -45,8 +49,8 @@ class RestaurantDetailPresenterTest: KoinTest {
     fun onRetryClicked_loadsRestaurant() {
         whenever(dataRepository.getRestaurant(any()))
             .thenReturn(Single.just(mock()))
-        RestaurantDetailPresenter(view, viewModel, get())
-            .onRetryClicked()
+        // Trigger Request
+        RestaurantDetailPresenter(view, viewModel, get()).onRetryClicked()
 
         verify(dataRepository).getRestaurant(RESTAURANT_ID)
     }
@@ -56,8 +60,8 @@ class RestaurantDetailPresenterTest: KoinTest {
         val restaurant = mock<RestaurantFull>()
         whenever(dataRepository.getRestaurant(any()))
             .thenReturn(Single.just(restaurant))
-        RestaurantDetailPresenter(view, viewModel, get())
-            .onCreate()
+        // Trigger Request
+        RestaurantDetailPresenter(view, viewModel, get()).onRetryClicked()
 
         verify(view).displayRestaurant(restaurant)
     }
@@ -66,8 +70,8 @@ class RestaurantDetailPresenterTest: KoinTest {
     fun onRestaurantListRequestFailure_updatesViewWithError() {
         whenever(dataRepository.getRestaurant(any()))
             .thenReturn(Single.error(Throwable()))
-        RestaurantDetailPresenter(view, viewModel, get())
-            .onCreate()
+        // Trigger Request
+        RestaurantDetailPresenter(view, viewModel, get()).onRetryClicked()
 
         verify(view).displayError()
     }

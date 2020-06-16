@@ -1,8 +1,10 @@
 package com.interview.doordashlite.ui.restaurantlist
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleRegistry
+import com.interview.doordashlite.base.testApplicationModule
 import com.interview.doordashlite.datalayer.DataRepository
 import com.interview.doordashlite.models.RestaurantCondensed
-import com.interview.doordashlite.base.testApplicationModule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -35,8 +37,10 @@ class RestaurantListPresenterTest : KoinTest {
     fun onCreate_loadsRestaurants() {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(listOf()))
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get())
-            .onCreate()
+        LifecycleRegistry(mock()).apply {
+            addObserver(RestaurantListPresenter(view, RestaurantListViewModel(), router, get()))
+            handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        }
 
         verify(dataRepository).getRestaurantList(any(), any())
     }
@@ -45,8 +49,7 @@ class RestaurantListPresenterTest : KoinTest {
     fun onRetryClicked_loadsRestaurants() {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(listOf()))
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get())
-            .onRetryClicked()
+        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
 
         verify(dataRepository).getRestaurantList(any(), any())
     }
@@ -55,8 +58,8 @@ class RestaurantListPresenterTest : KoinTest {
     fun onRestaurantListRequestSuccess_emptyResults_updatesViewWithEmptyState() {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(listOf()))
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get())
-            .onCreate()
+        // Trigger request
+        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
 
         verify(view).displayEmptyState()
     }
@@ -66,8 +69,8 @@ class RestaurantListPresenterTest : KoinTest {
         val restaurants = listOf(RestaurantCondensed("", "", "", "", "", 0))
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(restaurants))
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get())
-            .onCreate()
+        // Trigger request
+        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
 
         verify(view).displayRestaurants(restaurants)
     }
@@ -76,8 +79,8 @@ class RestaurantListPresenterTest : KoinTest {
     fun onRestaurantListRequestFailure_updatesViewWithError() {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.error(Throwable()))
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get())
-            .onCreate()
+        // Trigger request
+        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
 
         verify(view).displayError()
     }
