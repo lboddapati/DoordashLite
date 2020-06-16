@@ -14,7 +14,7 @@ class DataRepositoryImpl: DataRepository {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
-    private val doordashApi = retrofit.create(DoodashApi::class.java)
+    private val doordashApi = retrofit.create(DoordashApi::class.java)
 
     override fun getRestaurantList(
         latitude: Float,
