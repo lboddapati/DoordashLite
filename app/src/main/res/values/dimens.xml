@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="padding_tiny">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_default">16dp</dimen>
     <dimen name="padding_large">24dp</dimen>
     <dimen name="padding_huge">32dp</dimen>
 
+    <dimen name="text_size_header1">40sp</dimen>
+    <dimen name="text_size_header2">32sp</dimen>
     <dimen name="text_size_title">24sp</dimen>
-    <dimen name="text_size_body">16sp</dimen>
+    <dimen name="text_size_body">20sp</dimen>
     <dimen name="text_size_caption">14sp</dimen>
 
     <dimen name="thumbnail_width">96dp</dimen>
     <dimen name="restaurant_list_item_height">96dp</dimen>
 
     <dimen name="spinner_size">152dp</dimen>
+
+    <dimen name="toolbar_image_height">232dp</dimen>
+    <dimen name="toolbar_collapsed_height">56dp</dimen>
+    <dimen name="tall_toolbar_height">288dp</dimen>
 </resources>

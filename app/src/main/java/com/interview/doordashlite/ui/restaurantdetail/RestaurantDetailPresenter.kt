@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
 import com.interview.doordashlite.datalayer.DataRepository
+import com.interview.doordashlite.models.MenuCondensed
 import com.interview.doordashlite.models.RestaurantFull
 import io.reactivex.observers.DisposableSingleObserver
 import org.koin.core.KoinComponent
@@ -19,6 +20,10 @@ class RestaurantDetailPresenter(
 
     override fun onRetryClicked() {
         loadRestaurant()
+    }
+
+    override fun onMenuSelected(menu: MenuCondensed) {
+        // TODO
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

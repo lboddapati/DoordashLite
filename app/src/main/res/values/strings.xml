@@ -6,4 +6,17 @@
     <string name="generic_error">Oops! Something went wrong. Please try again</string>
     <string name="retry">Retry</string>
     <string name="no_restaurants_nearby">No Restaurants found nearby</string>
+
+    <plurals name="num_ratings">
+        <item quantity="one">%d rating</item>
+        <item quantity="other">%d ratings</item>
+    </plurals>
+
+    <string name="price_range_1">$</string>
+    <string name="price_range_2">$$</string>
+    <string name="price_range_3">$$$</string>
+    <string name="price_range_4">$$$$</string>
+
+    <string name="delivery_fee_formatted">Delivery fee: $%.2f</string>
+    <string name="menus">Menus</string>
 </resources>
