@@ -1,7 +1,7 @@
 # DoordashLite
 
 ## Architecture
-### MVP + Router
+### MVP + Router:
 The app is built using the MVP architecture pattern with some elements of VIPER (mainly the Router). Each screen consists of several components which follow a pre-defined contract for the View, Presenter and an optional Router.
 - Model - This is essentially the Data Layer. The DataRepository is used to fetch/update data (remote or local).
 - View - Implemented by Activity (or Fragment). Renders UI elements. Example: [RestaurantListActivity.kt](https://github.com/lboddapati/DoordashLite/blob/master/app/src/main/java/com/interview/doordashlite/ui/restaurantlist/RestaurantListActivity.kt)
