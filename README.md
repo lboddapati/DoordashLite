@@ -32,8 +32,7 @@ The application uses Koin for injecting the DataRepository, Presenters and other
     - Implement caching for restaurant list request to make subsequent requests faster.
 - The location is hardcoded to Doordash HQ (37.422740, -122.139956).
   - **TODO:** Get and use user's current location instead of harcoding location.
-- The restaurant detail screen is just a placeholder blank activity for now.
-  - **TODO:** Implement the restaurant detail screen.
+- The restaurant detail screen is a very barebones implementation for now.
 
 ## Known Issues
 - The LifecycleAwareSubscriptionManager disposes of any inflight requests. As a result, if the user navigates away from the app (backgrounds the app for example) while the restaurant list is still loading and comes back to it, they might see a forever loading spinner.
@@ -42,5 +41,5 @@ The application uses Koin for injecting the DataRepository, Presenters and other
     - Refresh restaurant list when user comes back to the activity (load requests in onResume instead of onCreate)
 
 ## Demo
-![demo](https://media.giphy.com/media/du9hsQpcVBXqSBLkfG/giphy.gif)
+![demo](https://media.giphy.com/media/QugxBh4CtIlEhBeGAn/giphy.gif)
    
