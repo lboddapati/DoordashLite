@@ -23,5 +23,20 @@ The application uses Koin for injecting the DataRepository, Presenters and other
 - Dependency Injection: [Koin](https://github.com/InsertKoinIO/koin)
 - Testing: koin-test, [mockito-kotlin](https://github.com/nhaarman/mockito-kotlin), [Robolectric](https://github.com/robolectric/robolectric)
 
-## Miscellaneous
+## Assumptions & Limitaions
 - API level supported: 21+
+- The restaurant list screen is a little slow to load since it loads up to 100 restaurants at once. 
+  - I set the limit to 100 to make the request a tiny bit faster. The response contains ~480 restaurants at the given lat-lng.
+  - TODO (performance improvements):
+    - Implement paginated + endless scrolling for performance improvements.
+    - Implement caching for restaurant list request to make subsequent requests faster.
+- The location is hardcoded to Doordash HQ (37.422740, -122.139956).
+  - TODO: Get and use user's current location instead of harcoding location.
+- The restaurant detail screen is just a placeholder blank activity for now.
+  - TODO: Implement the restaurant detail screen.
+
+## Known Issues
+- The LifecycleAwareSubscriptionManager disposes of any inflight requests. As a result, if the user navigates away from the app (backgrounds the app for example) while the restaurant list is still loading and comes back to it, they might see a forever loading spinner.
+  - TODO (potential fixes): 
+    - Build capability into subscription manager to replay inflight requests that were discarded
+    - Refresh restaurant list when user comes back to the activity (load requests in onResume instead of onCreate)
