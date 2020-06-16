@@ -11,9 +11,8 @@
         android:layout_height="match_parent"
         app:contentScrim="@android:color/white"
         app:expandedTitleTextAppearance="@style/HeaderText"
-        app:expandedTitleGravity="bottom"
-        app:expandedTitleMarginStart="@dimen/padding_small"
-        app:expandedTitleMarginTop="@dimen/padding_small"
+        app:expandedTitleMarginStart="@dimen/padding_default"
+        app:expandedTitleMarginBottom="@dimen/padding_small"
         app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
         <ImageView
@@ -29,7 +28,6 @@
             android:layout_height="@dimen/toolbar_collapsed_height"
             app:layout_collapseMode="pin"
             android:layout_gravity="bottom"
-            android:gravity="bottom"
             android:background="@android:color/white"/>
     </com.google.android.material.appbar.CollapsingToolbarLayout>
 </com.google.android.material.appbar.AppBarLayout>

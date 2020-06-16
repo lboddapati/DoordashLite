@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:overScrollMode="never"
+    android:layout_marginBottom="@dimen/toolbar_collapsed_height"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
@@ -37,6 +39,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/menu_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
