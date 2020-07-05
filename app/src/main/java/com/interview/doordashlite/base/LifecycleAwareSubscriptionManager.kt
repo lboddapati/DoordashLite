@@ -69,12 +69,21 @@ class LifecycleAwareSubscriptionManager(lifecycle: Lifecycle): LifecycleObserver
         .subscribeWith(observer)
         .also { disposables.add(it) }
 
-    fun <T> subscribe(
+    fun subscribe(
         completable: Completable,
         observer: DisposableCompletableObserver
     ) = completable
         .subscribeOn(subscriptionConfig.subscribeOnScheduler)
         .observeOn(subscriptionConfig.observeOnScheduler)
         .subscribeWith(observer)
+        .also { disposables.add(it) }
+
+    fun subscribe(completable: Completable) = completable
+        .subscribeOn(subscriptionConfig.subscribeOnScheduler)
+        .observeOn(subscriptionConfig.observeOnScheduler)
+        .subscribeWith(object: DisposableCompletableObserver() {
+            override fun onComplete() {}
+            override fun onError(e: Throwable) {}
+        })
         .also { disposables.add(it) }
 }

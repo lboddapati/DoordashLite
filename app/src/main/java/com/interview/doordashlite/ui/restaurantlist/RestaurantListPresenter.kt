@@ -5,6 +5,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
 import com.interview.doordashlite.datalayer.DataRepository
 import com.interview.doordashlite.models.RestaurantCondensed
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -31,9 +33,15 @@ class RestaurantListPresenter(
         view.displayLoading()
         subscriptionManager.subscribe(
             // TODO: get & use current location instead of hardcoding
-            dataRepository.getRestaurantList(viewModel.latitude, viewModel.longitude),
-            object: DisposableSingleObserver<List<RestaurantCondensed>>() {
-                override fun onSuccess(restaurants: List<RestaurantCondensed>) {
+            Single.zip(
+                dataRepository.getRestaurantList(viewModel.latitude, viewModel.longitude),
+                dataRepository.getFavoriteRestaurants(),
+                BiFunction<List<RestaurantCondensed>, Set<String>, List<RestaurantItemViewModel>> {
+                        restaurants, favorites -> convertRestaurantsToModels(restaurants, favorites)
+                }
+            ),
+            object: DisposableSingleObserver<List<RestaurantItemViewModel>>() {
+                override fun onSuccess(restaurants: List<RestaurantItemViewModel>) {
                     // TODO: paginated loading, performance improvements
                     if (restaurants.isEmpty()) {
                         view.displayEmptyState()
@@ -47,9 +55,29 @@ class RestaurantListPresenter(
                 }
             })
     }
+
+    override fun onFavoriteClicked(restaurantModel: RestaurantItemViewModel) {
+        if (restaurantModel.isFavorite) {
+            subscriptionManager.subscribe(dataRepository.removeFavoriteRestaurant(restaurantModel.restaurant.id))
+        } else {
+            subscriptionManager.subscribe(dataRepository.addFavoriteRestaurant(restaurantModel.restaurant.id))
+        }
+    }
+
+    private fun convertRestaurantsToModels(
+        restaurants: List<RestaurantCondensed>,
+        favorites: Set<String>
+    ): List<RestaurantItemViewModel> = restaurants.map { restaurant ->
+        RestaurantItemViewModel(restaurant, favorites.contains(restaurant.id))
+    }
 }
 
 data class RestaurantListViewModel(
     var latitude: Float = 37.422740.toFloat(),
     var longitude: Float = (-122.139956).toFloat()
+)
+
+data class RestaurantItemViewModel(
+    val restaurant: RestaurantCondensed,
+    var isFavorite: Boolean
 )

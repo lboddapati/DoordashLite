@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.interview.doordashlite.R
 import com.interview.doordashlite.base.BaseActivity
-import com.interview.doordashlite.models.RestaurantCondensed
 import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
 
@@ -15,17 +14,16 @@ import org.koin.core.parameter.parametersOf
  */
 class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
 
-    private val presenter: RestaurantListContract.Presenter = get {
-        parametersOf(this, RestaurantListRouter(this), lifecycle)
-    }
+    private lateinit var presenter: RestaurantListContract.Presenter
     private val adapter: RestaurantListAdapter by lazy { RestaurantListAdapter(presenter) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = getString(R.string.discover)
+        presenter = get { parametersOf(this, RestaurantListRouter(this), lifecycle) }
     }
 
-    override fun displayRestaurants(restaurants: List<RestaurantCondensed>) {
+    override fun displayRestaurants(restaurants: List<RestaurantItemViewModel>) {
         setContentView(R.layout.recyclerview)
         setupRecyclerView()
         adapter.addRestaurants(restaurants)
