@@ -24,6 +24,7 @@ private const val REQUEST_LOCATION_PERMISSION = 999
 private const val REQUEST_CHECK_LOCATION_SETTINGS = 777
 private const val LOCATION_REQUEST_INTERVAL = 10000L
 private const val LOCATION_REQUEST_FASTEST_INTERVAL = 5000L
+private const val SCROLL_END_OFFSET = 5
 
 /**
  * Activity for displaying a list of restaurants around a given location
@@ -52,9 +53,14 @@ class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
         }
     }
 
-    override fun displayRestaurants(restaurants: List<RestaurantItemViewModel>) {
-        setContentView(R.layout.recyclerview)
-        setupRecyclerView()
+    override fun displayRestaurants(
+        restaurants: List<RestaurantItemViewModel>,
+        isFirstLoad: Boolean
+    ) {
+        if (isFirstLoad) {
+            setContentView(R.layout.recyclerview)
+            setupRecyclerView()
+        }
         adapter.addRestaurants(restaurants)
     }
 
@@ -113,13 +119,30 @@ class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
     }
 
     private fun setupRecyclerView() {
-        findViewById<RecyclerView>(R.id.recyclerview).apply {
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview).apply {
             layoutManager = LinearLayoutManager(this@RestaurantListActivity)
             adapter = this@RestaurantListActivity.adapter
-            addItemDecoration(DividerItemDecoration(
-                this@RestaurantListActivity,
-                RecyclerView.VERTICAL
-            ))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@RestaurantListActivity,
+                    RecyclerView.VERTICAL
+                )
+            )
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    (recyclerView.layoutManager as? LinearLayoutManager)?.let {
+                        val lastVisibleItemPosition = it.findLastCompletelyVisibleItemPosition()
+                        val lastAdapterItemPosition =
+                            this@RestaurantListActivity.adapter.itemCount - 1
+                        if (lastVisibleItemPosition > 0 &&
+                            lastVisibleItemPosition == lastAdapterItemPosition - SCROLL_END_OFFSET
+                        ) {
+                            presenter.onScrolledToEnd()
+                        }
+                    }
+                }
+            })
         }
     }
 

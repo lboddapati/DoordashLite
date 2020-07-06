@@ -13,7 +13,8 @@ interface DoordashApi {
     fun getRestaurantList(
         @Query("lat") latitude: Double,
         @Query("lng") longitude: Double,
-        @Query("limit") limit: Int = 20
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
     ) : Single<List<RestaurantCondensed>>
 
     @GET("restaurant/{id}/")

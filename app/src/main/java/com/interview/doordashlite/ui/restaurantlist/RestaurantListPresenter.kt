@@ -14,6 +14,8 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+private const val DEFAULT_LIMIT = 20
+
 class RestaurantListPresenter(
     private val view: RestaurantListContract.View,
     private val viewModel: RestaurantListViewModel,
@@ -48,19 +50,40 @@ class RestaurantListPresenter(
         }
     }
 
+    override fun onFavoriteClicked(restaurantModel: RestaurantItemViewModel) {
+        if (restaurantModel.isFavorite) {
+            subscriptionManager.subscribe(dataRepository.removeFavoriteRestaurant(restaurantModel.restaurant.id))
+        } else {
+            subscriptionManager.subscribe(dataRepository.addFavoriteRestaurant(restaurantModel.restaurant.id))
+        }
+    }
+
+    override fun onScrolledToEnd() {
+        if (viewModel.canLoadMore) {
+            loadRestaurants()
+        }
+    }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun loadRestaurants() {
+        if (viewModel.isLoading) return
+
         if (viewModel.location == null) {
             view.checkAndGetLocation()
             return
         }
 
-        view.displayLoading()
+        val isFirstLoad = viewModel.offset == 0
+        if (isFirstLoad) view.displayLoading()
+        viewModel.isLoading = true
+
         subscriptionManager.subscribe(
             Single.zip(
                 dataRepository.getRestaurantList(
                     viewModel.location?.latitude ?: 0.0,
-                    viewModel.location?.longitude ?: 0.0
+                    viewModel.location?.longitude ?: 0.0,
+                    DEFAULT_LIMIT,
+                    viewModel.offset
                 ),
                 dataRepository.getFavoriteRestaurants(),
                 BiFunction<List<RestaurantCondensed>, Set<String>, List<RestaurantItemViewModel>> {
@@ -69,26 +92,22 @@ class RestaurantListPresenter(
             ),
             object: DisposableSingleObserver<List<RestaurantItemViewModel>>() {
                 override fun onSuccess(restaurants: List<RestaurantItemViewModel>) {
-                    // TODO: paginated loading, performance improvements
-                    if (restaurants.isEmpty()) {
+                    if (restaurants.isEmpty() && isFirstLoad) {
                         view.displayEmptyState()
                     } else {
-                        view.displayRestaurants(restaurants)
+                        view.displayRestaurants(restaurants, isFirstLoad)
                     }
+
+                    viewModel.offset = restaurants.size
+                    viewModel.canLoadMore = restaurants.size >= DEFAULT_LIMIT - 1
+                    viewModel.isLoading = false
                 }
 
                 override fun onError(error: Throwable) {
-                    view.displayError(ErrorType.GENERIC)
+                    if (isFirstLoad) view.displayError(ErrorType.GENERIC)
+                    viewModel.isLoading = false
                 }
             })
-    }
-
-    override fun onFavoriteClicked(restaurantModel: RestaurantItemViewModel) {
-        if (restaurantModel.isFavorite) {
-            subscriptionManager.subscribe(dataRepository.removeFavoriteRestaurant(restaurantModel.restaurant.id))
-        } else {
-            subscriptionManager.subscribe(dataRepository.addFavoriteRestaurant(restaurantModel.restaurant.id))
-        }
     }
 
     private fun convertRestaurantsToModels(
@@ -100,7 +119,10 @@ class RestaurantListPresenter(
 }
 
 data class RestaurantListViewModel(
-    var location: Location? = null
+    var location: Location? = null,
+    var offset: Int = 0,
+    var canLoadMore: Boolean = true,
+    var isLoading: Boolean = false
 ) {
     fun saveStateToBundle(bundle: Bundle) {
         bundle.putParcelable(LOCATION_KEY, location)

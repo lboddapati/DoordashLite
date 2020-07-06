@@ -26,8 +26,10 @@ class DataRepositoryImpl: DataRepository, KoinComponent {
 
     override fun getRestaurantList(
         latitude: Double,
-        longitude: Double
-    ) = doordashApi.getRestaurantList(latitude, longitude)
+        longitude: Double,
+        limit: Int,
+        offset: Int
+    ) = doordashApi.getRestaurantList(latitude, longitude, limit, offset)
 
     override fun getRestaurant(id: String) = doordashApi.getRestaurant(id)
 
