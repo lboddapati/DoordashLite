@@ -25,8 +25,8 @@ class DataRepositoryImpl: DataRepository, KoinComponent {
     private val sharedPreferences by inject<SharedPreferences>()
 
     override fun getRestaurantList(
-        latitude: Float,
-        longitude: Float
+        latitude: Double,
+        longitude: Double
     ) = doordashApi.getRestaurantList(latitude, longitude)
 
     override fun getRestaurant(id: String) = doordashApi.getRestaurant(id)

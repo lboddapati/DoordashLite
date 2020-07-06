@@ -6,6 +6,8 @@
     <string name="generic_error">Oops! Something went wrong. Please try again</string>
     <string name="retry">Retry</string>
     <string name="no_restaurants_nearby">No Restaurants found nearby</string>
+    <string name="no_location_error">Unable to find location. Check if location is turned on and try again.</string>
+    <string name="location_permission_denied_error">Location Permission is required to get device location. Please turn on location access.</string>
 
     <plurals name="num_ratings">
         <item quantity="one">%d rating</item>

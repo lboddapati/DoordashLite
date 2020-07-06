@@ -28,7 +28,7 @@ class RestaurantListAdapterTest {
     @Test
     fun onBindViewHolder_delegatesToViewHolder() {
         val viewHolder = mock<RestaurantListItemViewHolder>()
-        val restaurant = mock<RestaurantCondensed>()
+        val restaurant = mock<RestaurantItemViewModel>()
         RestaurantListAdapter(mock()).apply {
             addRestaurants(listOf(restaurant))
             onBindViewHolder(viewHolder, 0)
@@ -42,7 +42,7 @@ class RestaurantListAdapterTest {
         val presenter = mock<RestaurantListContract.Presenter>()
         val restaurant = RestaurantCondensed("", "", "", "", "", 0)
         RestaurantListAdapter(presenter).apply {
-            addRestaurants(listOf(restaurant))
+            addRestaurants(listOf(RestaurantItemViewModel(restaurant, false)))
             // Setup and bind viewholder
             val viewHolder = onCreateViewHolder(
                 FrameLayout(ApplicationProvider.getApplicationContext()), 0)

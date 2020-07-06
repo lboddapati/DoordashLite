@@ -30,6 +30,7 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+            unitTests.returnDefaultValues = true
         }
     }
 }
@@ -58,6 +59,9 @@ dependencies {
 
     // Image Loading
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    // Location
+    implementation "com.google.android.gms:play-services-location:$location_services_version"
 
     // Unit Tests
     testImplementation 'junit:junit:4.13'

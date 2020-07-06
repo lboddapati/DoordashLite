@@ -1,15 +1,18 @@
 package com.interview.doordashlite.ui.restaurantlist
 
+import android.location.Location
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import com.interview.doordashlite.base.testApplicationModule
 import com.interview.doordashlite.datalayer.DataRepository
+import com.interview.doordashlite.models.ErrorType
 import com.interview.doordashlite.models.RestaurantCondensed
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.koin.dsl.module
@@ -33,23 +36,29 @@ class RestaurantListPresenterTest : KoinTest {
     private val view: RestaurantListContract.View by inject()
     private val router: RestaurantListContract.Router by inject()
 
+    private val viewModel = RestaurantListViewModel(Location(""))
+
+    @Before
+    fun setUp() {
+        whenever(dataRepository.getFavoriteRestaurants()).thenReturn(Single.just(setOf()))
+    }
+
     @Test
-    fun onCreate_loadsRestaurants() {
-        whenever(dataRepository.getRestaurantList(any(), any()))
-            .thenReturn(Single.just(listOf()))
+    fun onCreate_withoutLocation_getsLocation() {
         LifecycleRegistry(mock()).apply {
             addObserver(RestaurantListPresenter(view, RestaurantListViewModel(), router, get()))
             handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         }
 
-        verify(dataRepository).getRestaurantList(any(), any())
+        verify(view).checkAndGetLocation()
     }
 
     @Test
-    fun onRetryClicked_loadsRestaurants() {
+    fun onRetryClicked_withGenericErrorType_loadsRestaurants() {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(listOf()))
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
+        RestaurantListPresenter(view, viewModel, router, get())
+            .onRetryClicked(ErrorType.GENERIC)
 
         verify(dataRepository).getRestaurantList(any(), any())
     }
@@ -59,20 +68,21 @@ class RestaurantListPresenterTest : KoinTest {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.just(listOf()))
         // Trigger request
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
+        RestaurantListPresenter(view, viewModel, router, get())
+            .onRetryClicked(ErrorType.GENERIC)
 
         verify(view).displayEmptyState()
     }
 
     @Test
     fun onRestaurantListRequestSuccess_nonEmptyResults_updatesViewWithResults() {
-        val restaurants = listOf(RestaurantCondensed("", "", "", "", "", 0))
         whenever(dataRepository.getRestaurantList(any(), any()))
-            .thenReturn(Single.just(restaurants))
+            .thenReturn(Single.just(listOf(mock<RestaurantCondensed>())))
         // Trigger request
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
+        RestaurantListPresenter(view, viewModel, router, get())
+            .onRetryClicked(ErrorType.GENERIC)
 
-        verify(view).displayRestaurants(restaurants)
+        verify(view).displayRestaurants(any())
     }
 
     @Test
@@ -80,15 +90,16 @@ class RestaurantListPresenterTest : KoinTest {
         whenever(dataRepository.getRestaurantList(any(), any()))
             .thenReturn(Single.error(Throwable()))
         // Trigger request
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get()).onRetryClicked()
+        RestaurantListPresenter(view, viewModel, router, get())
+            .onRetryClicked(ErrorType.GENERIC)
 
-        verify(view).displayError()
+        verify(view).displayError(ErrorType.GENERIC)
     }
 
     @Test
     fun onRestaurantSelected_delegatesToRouter() {
         val restaurant = RestaurantCondensed("someId", "", "", "", "", 0)
-        RestaurantListPresenter(view, RestaurantListViewModel(), router, get())
+        RestaurantListPresenter(view, viewModel, router, get())
             .onRestaurantSelected(restaurant)
 
         verify(router).openRestaurantDetail(restaurant.id)
