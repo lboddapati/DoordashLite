@@ -42,7 +42,14 @@ class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = getString(R.string.discover)
-        presenter = get { parametersOf(this, RestaurantListRouter(this), lifecycle) }
+        presenter = get {
+            val viewModel = if (savedInstanceState != null) {
+                RestaurantListViewModel.fromBundle(savedInstanceState)
+            } else {
+                RestaurantListViewModel()
+            }
+            parametersOf(this, viewModel, RestaurantListRouter(this), lifecycle)
+        }
     }
 
     override fun displayRestaurants(restaurants: List<RestaurantItemViewModel>) {
@@ -85,6 +92,11 @@ class RestaurantListActivity: BaseActivity(), RestaurantListContract.View {
                     displayError(ErrorType.LOCATION_PERMISSION_DENIED)
                 }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        presenter.onSaveInstanceState(outState)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

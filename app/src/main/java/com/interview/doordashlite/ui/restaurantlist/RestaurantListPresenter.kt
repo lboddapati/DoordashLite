@@ -1,6 +1,7 @@
 package com.interview.doordashlite.ui.restaurantlist
 
 import android.location.Location
+import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
@@ -21,6 +22,10 @@ class RestaurantListPresenter(
 ): RestaurantListContract.Presenter, KoinComponent {
 
     private val dataRepository : DataRepository by inject()
+
+    override fun onSaveInstanceState(saveState: Bundle) {
+        viewModel.saveStateToBundle(saveState)
+    }
 
     override fun onLocationReceived(location: Location?) {
         if (location == null) {
@@ -96,7 +101,18 @@ class RestaurantListPresenter(
 
 data class RestaurantListViewModel(
     var location: Location? = null
-)
+) {
+    fun saveStateToBundle(bundle: Bundle) {
+        bundle.putParcelable(LOCATION_KEY, location)
+    }
+
+    companion object {
+        private const val LOCATION_KEY = "location_key"
+        fun fromBundle(bundle: Bundle) = RestaurantListViewModel(
+            bundle.getParcelable(LOCATION_KEY)
+        )
+    }
+}
 
 data class RestaurantItemViewModel(
     val restaurant: RestaurantCondensed,
