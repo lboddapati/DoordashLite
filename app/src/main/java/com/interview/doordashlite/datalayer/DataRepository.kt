@@ -1,5 +1,6 @@
 package com.interview.doordashlite.datalayer
 
+import com.interview.doordashlite.models.LoginResponse
 import com.interview.doordashlite.models.RestaurantCondensed
 import com.interview.doordashlite.models.RestaurantFull
 import io.reactivex.Completable
@@ -16,4 +17,6 @@ interface DataRepository {
     fun addFavoriteRestaurant(restaurantId: String): Completable
 
     fun removeFavoriteRestaurant(restaurantId: String): Completable
+
+    fun login(email: String, password: String): Single<LoginResponse>
 }

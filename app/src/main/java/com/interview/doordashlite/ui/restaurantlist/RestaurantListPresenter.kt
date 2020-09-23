@@ -1,9 +1,11 @@
 package com.interview.doordashlite.ui.restaurantlist
 
+import android.content.SharedPreferences
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import com.interview.doordashlite.base.LifecycleAwareSubscriptionManager
 import com.interview.doordashlite.datalayer.DataRepository
+import com.interview.doordashlite.datalayer.LOGIN_TOKEN_KEY
 import com.interview.doordashlite.models.RestaurantCondensed
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -19,6 +21,7 @@ class RestaurantListPresenter(
 ): RestaurantListContract.Presenter, KoinComponent {
 
     private val dataRepository : DataRepository by inject()
+    private val sharedPreferences: SharedPreferences by inject()
 
     override fun onRestaurantSelected(restaurant: RestaurantCondensed) {
         router.openRestaurantDetail(restaurant.id)
@@ -29,6 +32,14 @@ class RestaurantListPresenter(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    private fun onCreate() {
+        val isLoggedIn = sharedPreferences.getString(LOGIN_TOKEN_KEY, null) != null
+        if (isLoggedIn) {
+            loadRestaurants()
+        } else {
+            router.startLoginActivity()
+        }
+    }
     private fun loadRestaurants() {
         view.displayLoading()
         subscriptionManager.subscribe(

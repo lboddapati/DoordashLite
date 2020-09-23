@@ -1,11 +1,11 @@
 package com.interview.doordashlite.datalayer
 
+import com.interview.doordashlite.models.LoginRequestBody
+import com.interview.doordashlite.models.LoginResponse
 import com.interview.doordashlite.models.RestaurantCondensed
 import com.interview.doordashlite.models.RestaurantFull
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface DoordashApi {
 
@@ -20,4 +20,9 @@ interface DoordashApi {
     fun getRestaurant(
         @Path("id") id: String
     ) : Single<RestaurantFull>
+
+    @POST("auth/token/")
+    fun login(
+        @Body requestBody: LoginRequestBody
+    ): Single<LoginResponse>
 }

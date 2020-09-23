@@ -19,5 +19,6 @@ interface RestaurantListContract {
 
     interface Router {
         fun openRestaurantDetail(restaurantId: String)
+        fun startLoginActivity()
     }
 }

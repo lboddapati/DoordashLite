@@ -1,6 +1,8 @@
 package com.interview.doordashlite.datalayer
 
 import android.content.SharedPreferences
+import com.interview.doordashlite.models.LoginRequestBody
+import com.interview.doordashlite.models.LoginResponse
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.koin.core.KoinComponent
@@ -11,6 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 private const val BASE_URL = "https://api.doordash.com/v2/"
 private const val FAVORITE_RESTAURANTS_KEY = "favorite_restaurants"
+const val LOGIN_TOKEN_KEY = "login_token_key"
 
 // TODO: Implement caching for the responses
 class DataRepositoryImpl: DataRepository, KoinComponent {
@@ -61,5 +64,9 @@ class DataRepositoryImpl: DataRepository, KoinComponent {
         } else {
             emitter.onError(Error("Error removing $restaurantId from favorites."))
         }
+    }
+
+    override fun login(email: String, password: String): Single<LoginResponse> {
+        return doordashApi.login(LoginRequestBody(email, password))
     }
 }
